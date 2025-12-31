@@ -68,8 +68,8 @@
 ---
 
 ## Several pages for example
-![Home Page](screenshots/Screenshot (383).png)
-![Home Page](screenshots/Screenshot (403).png)
-![Home Page](screenshots/Screenshot (406).png)
-![Home Page](screenshots/Screenshot (405).png)
+![Home Page](screenshots/1.png)
+![Home Page](screenshots/2.png)
+![Home Page](screenshots/3.png)
+![Home Page](screenshots/4.png)
 
