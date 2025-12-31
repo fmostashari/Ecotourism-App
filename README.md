@@ -67,20 +67,9 @@
 
 ---
 
-## Project Structure
-
-```text
-project/
-│
-├── frontend/
-│   ├── index.html
-│   ├── style.css
-│   └── app.js
-│
-├── backend/
-│   ├── server.js
-│   ├── database.js
-│   └── data.json
-│
-└── README.md
+## Several pages for example
+![Home Page](screenshots/screenshot(383).png)
+![Home Page](screenshots/screenshot(403).png)
+![Home Page](screenshots/screenshot(406).png)
+![Home Page](screenshots/screenshot(405).png)
 
