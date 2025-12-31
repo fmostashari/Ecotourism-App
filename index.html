@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>اپلیکیشن اقامتگاه</title>
+
+    <link rel="manifest" href="manifest.json" />
+
+    <script src="https://code.iconify.design/iconify-icon/3.0.0/iconify-icon.min.js"></script>
+    <!-- Swiper.js CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app-container">
+      <div id="onboarding" class="swiper onboarding-swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <img
+              src="https://placehold.co/200x200/dbeafe/3b82f6?text=Explore"
+              alt="Explore"
+            />
+            <h2>اقامتگاه رویایی خود را پیدا کنید</h2>
+            <p>هزاران هتل و اقامتگاه بی‌نظیر را در دستان خود کشف کنید.</p>
+          </div>
+          <div class="swiper-slide">
+            <img
+              src="https://placehold.co/200x200/dbeafe/3b82f6?text=Book"
+              alt="Book"
+            />
+            <h2>با اطمینان رزرو کنید</h2>
+            <p>
+              از پرداخت امن و تأیید آنی برای تجربه‌ای بدون نگرانی لذت ببرید.
+            </p>
+          </div>
+          <div class="swiper-slide">
+            <img
+              src="https://placehold.co/200x200/dbeafe/3b82f6?text=Travel"
+              alt="Travel"
+            />
+            <h2>سفر کنید و لذت ببرید</h2>
+            <p>مقصد عالی شما فقط چند کلیک فاصله دارد. بزن بریم!</p>
+          </div>
+        </div>
+        <div class="swiper-pagination"></div>
+
+        <div class="onboarding-nav">
+          <button id="next-button" class="btn">بعدی</button>
+          <button id="finish-button" class="btn btn-primary hidden">
+            بزن بریم!
+          </button>
+        </div>
+      </div>
+
+      <div id="loading-overlay" class="hidden">
+        <div class="spinner"></div>
+        <p>در حال بارگذاری...</p>
+      </div>
+      <div id="main-app" class="hidden">
+        <main>
+          <section id="page-home" class="page active">
+            <div class="home-header">
+              <div>
+                <small>موقعیت فعلی</small>
+                <div
+                  class="location-select-wrapper"
+                  style="display: flex; align-items: center; gap: 5px"
+                >
+                  <select
+                    id="location-select"
+                    style="
+                      background: transparent;
+                      border: none;
+                      font-family: 'Vazirmatn';
+                      font-weight: bold;
+                      font-size: 16px;
+                      color: var(--text-color);
+                      cursor: pointer;
+                      outline: none;
+                    "
+                  >
+                    <option value="tehran">ایران، تهران</option>
+                    <option value="isfahan">ایران، اصفهان</option>
+                    <option value="shiraz">ایران، شیراز</option>
+                    <option value="mashhad">ایران، مشهد</option>
+                    <option value="tabriz">ایران، تبریز</option>
+                    <option value="north">ایران، شمال</option>
+                    <option value="kish">ایران، کیش</option>
+                  </select>
+                  <iconify-icon icon="mdi:chevron-down"></iconify-icon>
+                </div>
+              </div>
+              <div class="profile-pic" id="home-profile-avatar"></div>
+            </div>
+            <div class="search-bar">
+              <iconify-icon icon="mdi:magnify"></iconify-icon>
+              <input type="text" placeholder="جستجو" />
+            </div>
+
+            <div class="section-header">
+              <h2>بهترین مکان‌ها</h2>
+              <a
+                href="#page-search-results?sort=top"
+                class="view-all-link nav-link"
+                >مشاهده همه</a
+              >
+            </div>
+            <div class="swiper hotel-swiper">
+              <div class="swiper-wrapper"></div>
+            </div>
+
+            <div class="section-header">
+              <h2>اقامتگاه‌های دیگر</h2>
+              <a
+                href="#page-search-results?sort=all"
+                class="view-all-link nav-link"
+                >مشاهده همه</a
+              >
+            </div>
+            <div class="swiper all-hotels-swiper">
+              <div class="swiper-wrapper"></div>
+            </div>
+          </section>
+
+          <section id="page-search-results" class="page">
+            <div class="search-header-fixed">
+              <div class="page-navigation-search">
+                <a href="#page-home" class="btn-icon nav-link"
+                  ><iconify-icon icon="mdi:arrow-right"></iconify-icon
+                ></a>
+                <div class="search-bar">
+                  <iconify-icon icon="mdi:magnify"></iconify-icon>
+                  <input type="text" placeholder="جستجو در نتایج..." />
+                </div>
+              </div>
+
+              <div class="swiper filter-swiper">
+                <div class="swiper-wrapper">
+                  <div class="swiper-slide">
+                    <button
+                      class="filter-button"
+                      data-filter-target="star-filter-menu"
+                    >
+                      <iconify-icon icon="mdi:star-outline"></iconify-icon>
+                      <span>امتیاز</span>
+                    </button>
+                  </div>
+                  <div class="swiper-slide">
+                    <button
+                      class="filter-button"
+                      data-filter-target="price-filter-menu"
+                    >
+                      <iconify-icon icon="mdi:cash"></iconify-icon>
+                      <span>قیمت</span>
+                    </button>
+                  </div>
+                  <div class="swiper-slide">
+                    <button
+                      class="filter-button"
+                      data-filter-target="sort-filter-menu"
+                    >
+                      <iconify-icon icon="mdi:sort"></iconify-icon>
+                      <span>مرتب‌سازی</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div id="star-filter-menu" class="filter-menu">
+                <h4>امتیاز هتل (ستاره)</h4>
+                <label
+                  ><input type="checkbox" name="star" value="5" /> ۵
+                  ستاره</label
+                >
+                <label
+                  ><input type="checkbox" name="star" value="4" /> ۴
+                  ستاره</label
+                >
+                <label
+                  ><input type="checkbox" name="star" value="3" /> ۳
+                  ستاره</label
+                >
+                <button class="btn btn-primary apply-filters">اعمال</button>
+              </div>
+              <div id="price-filter-menu" class="filter-menu">
+                <h4>محدوده قیمت (برای هر شب)</h4>
+                <label
+                  ><input type="radio" name="price" value="all" checked />
+                  همه</label
+                >
+                <label
+                  ><input type="radio" name="price" value="0-3000000" /> کمتر از
+                  ۳,۰۰۰,۰۰۰ تومان</label
+                >
+                <label
+                  ><input type="radio" name="price" value="3000000-7000000" />
+                  بین ۳,۰۰۰,۰۰۰ تا ۷,۰۰۰,۰۰۰ تومان</label
+                >
+                <label
+                  ><input type="radio" name="price" value="7000000-99999999" />
+                  بیشتر از ۷,۰۰۰,۰۰۰ تومان</label
+                >
+                <button class="btn btn-primary apply-filters">اعمال</button>
+              </div>
+              <div id="sort-filter-menu" class="filter-menu">
+                <h4>مرتب‌سازی بر اساس</h4>
+                <label
+                  ><input type="radio" name="sort" value="default" checked />
+                  پیش‌فرض</label
+                >
+                <label
+                  ><input type="radio" name="sort" value="rating-desc" />
+                  بیشترین امتیاز</label
+                >
+                <label
+                  ><input type="radio" name="sort" value="price-asc" /> کمترین
+                  قیمت</label
+                >
+                <label
+                  ><input type="radio" name="sort" value="price-desc" /> بیشترین
+                  قیمت</label
+                >
+                <button class="btn btn-primary apply-filters">اعمال</button>
+              </div>
+              <h2 id="search-results-title">نتایج جستجو</h2>
+            </div>
+            <div id="search-results-container"></div>
+          </section>
+
+          <section id="page-details" class="page">
+            <div class="details-scroll-container"></div>
+
+            <div class="details-footer"></div>
+          </section>
+
+          <section id="page-book-hotel" class="page">
+            <div class="page-header">
+              <div class="page-navigation">
+                <a
+                  href="#page-details"
+                  class="btn-icon nav-link back-to-details"
+                  ><iconify-icon icon="mdi:arrow-right"></iconify-icon
+                ></a>
+                <h2>تکمیل رزرو</h2>
+              </div>
+            </div>
+            <div class="form-container">
+              <h3 id="booking-hotel-name"></h3>
+              <p>لطفاً اطلاعات رزرو خود را وارد کنید.</p>
+              <form id="booking-form">
+                <div class="input-group">
+                  <label for="booking-checkin">تاریخ ورود</label>
+                  <input
+                    type="date"
+                    id="booking-checkin"
+                    placeholder="تاریخ ورود"
+                    required
+                  />
+                  <iconify-icon icon="mdi:calendar-range"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="booking-checkout">تاریخ خروج</label>
+                  <input
+                    type="date"
+                    id="booking-checkout"
+                    placeholder="تاریخ خروج"
+                    required
+                  />
+                  <iconify-icon icon="mdi:calendar-range"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="booking-guests">تعداد مهمانان</label>
+                  <input
+                    type="number"
+                    id="booking-guests"
+                    placeholder="تعداد مهمانان"
+                    min="1"
+                    value="1"
+                    required
+                  />
+                  <iconify-icon icon="mdi:account-group"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="booking-name">نام کامل</label>
+                  <input
+                    type="text"
+                    id="booking-name"
+                    placeholder="نام کامل شما"
+                    required
+                  />
+                  <iconify-icon icon="mdi:account"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="booking-email">ایمیل</label>
+                  <input
+                    type="email"
+                    id="booking-email"
+                    placeholder="ایمیل شما"
+                    required
+                  />
+                  <iconify-icon icon="mdi:email"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="booking-phone">شماره تماس</label>
+                  <input
+                    type="tel"
+                    id="booking-phone"
+                    placeholder="شماره تماس شما"
+                    required
+                  />
+                  <iconify-icon icon="mdi:phone"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="booking-description"
+                    >درخواست‌های ویژه (اختیاری)</label
+                  >
+                  <textarea
+                    id="booking-description"
+                    placeholder="درخواست‌های ویژه"
+                  ></textarea>
+                </div>
+                <div class="booking-summary">
+                  <h4>خلاصه رزرو</h4>
+                  <div class="summary-item">
+                    <span>قیمت هر شب:</span>
+                    <span class="price-value"
+                      ><span id="booking-price-per-night">0</span> تومان</span
+                    >
+                  </div>
+                  <div class="summary-item">
+                    <span>تعداد شب‌ها:</span>
+                    <span><span id="booking-nights">0</span> شب</span>
+                  </div>
+                  <hr />
+                  <div class="summary-item total">
+                    <span>مبلغ کل:</span>
+                    <span class="price-value"
+                      ><span id="booking-total-price">0</span> تومان</span
+                    >
+                  </div>
+                </div>
+                <button
+                  id="confirm-booking-button"
+                  type="submit"
+                  class="btn btn-primary full-width"
+                >
+                  تایید و رزرو
+                </button>
+              </form>
+            </div>
+          </section>
+
+          <section id="page-payment" class="page">
+            <div class="page-header">
+              <div class="page-navigation">
+                <a
+                  href="#page-book-hotel"
+                  class="btn-icon nav-link back-to-book"
+                >
+                  <iconify-icon icon="mdi:arrow-right"></iconify-icon>
+                </a>
+                <h2>درگاه پرداخت</h2>
+              </div>
+            </div>
+
+            <div class="form-container">
+              <div
+                class="payment-card-visual"
+                style="
+                  background: linear-gradient(135deg, #4a69ff, #2d3748);
+                  color: white;
+                  padding: 20px;
+                  border-radius: 16px;
+                  margin-bottom: 30px;
+                  text-align: left;
+                  direction: ltr;
+                  box-shadow: 0 10px 20px rgba(74, 105, 255, 0.3);
+                "
+              >
+                <div
+                  style="
+                    font-size: 24px;
+                    margin-bottom: 20px;
+                    letter-spacing: 2px;
+                  "
+                >
+                  **** **** **** <span id="card-last-digits">1234</span>
+                </div>
+                <div style="display: flex; justify-content: space-between">
+                  <div>
+                    <small style="font-size: 10px; opacity: 0.8"
+                      >Card Holder</small
+                    >
+                    <div id="card-holder-name" style="font-weight: bold">
+                      TOURIST
+                    </div>
+                  </div>
+                  <div>
+                    <small style="font-size: 10px; opacity: 0.8">Expires</small>
+                    <div style="font-weight: bold">12/26</div>
+                  </div>
+                </div>
+              </div>
+
+              <form id="payment-form">
+                <div class="input-group">
+                  <label>شماره کارت</label>
+                  <input
+                    type="tel"
+                    placeholder="0000-0000-0000-0000"
+                    maxlength="19"
+                    dir="ltr"
+                    style="text-align: center; letter-spacing: 2px"
+                    required
+                  />
+                  <iconify-icon icon="mdi:credit-card-outline"></iconify-icon>
+                </div>
+
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 16px;
+                  "
+                >
+                  <div class="input-group">
+                    <label>رمز دوم (POYA)</label>
+                    <input
+                      type="password"
+                      placeholder="*****"
+                      maxlength="6"
+                      style="text-align: center"
+                      required
+                    />
+                  </div>
+                  <div class="input-group">
+                    <label>CVV2</label>
+                    <input
+                      type="tel"
+                      placeholder="1234"
+                      maxlength="4"
+                      style="text-align: center"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div class="booking-summary" style="margin-top: 10px">
+                  <div class="summary-item total">
+                    <span>مبلغ قابل پرداخت:</span>
+                    <span
+                      class="price-value"
+                      style="color: var(--primary-color)"
+                      ><span id="payment-amount">0</span> تومان</span
+                    >
+                  </div>
+                </div>
+
+                <button
+                  id="process-payment-button"
+                  type="submit"
+                  class="btn btn-primary full-width"
+                  style="
+                    background-color: #10b981;
+                    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+                  "
+                >
+                  <iconify-icon icon="mdi:check-circle-outline"></iconify-icon>
+                  پرداخت و تکمیل رزرو
+                </button>
+
+                <button
+                  type="button"
+                  class="btn btn-danger full-width"
+                  style="
+                    margin-top: 10px;
+                    background-color: transparent;
+                    color: #ff4b4b;
+                    border: 1px solid #ff4b4b;
+                    box-shadow: none;
+                  "
+                  onclick="window.history.back()"
+                >
+                  انصراف
+                </button>
+              </form>
+            </div>
+          </section>
+
+          <section id="page-login" class="page">
+            <div class="auth-banner">
+              <iconify-icon
+                icon="geo:ui-earth-east"
+                width="200"
+                height="200"
+              ></iconify-icon>
+            </div>
+            <div class="form-container">
+              <h2>خوش آمدید!</h2>
+              <p>برای ادامه وارد حساب کاربری خود شوید.</p>
+              <form>
+                <div class="input-group">
+                  <label for="login-username">نام کاربری</label>
+                  <input
+                    type="username"
+                    id="login-username"
+                    placeholder="hossein2890"
+                  />
+                  <iconify-icon icon="mdi:user"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="login-password">رمز عبور</label>
+                  <input
+                    type="password"
+                    id="login-password"
+                    placeholder="ad4#516s"
+                  />
+                  <iconify-icon icon="mdi:key-variant"></iconify-icon>
+                </div>
+                <button
+                  id="login-button"
+                  type="submit"
+                  class="btn btn-primary full-width"
+                >
+                  <iconify-icon icon="mdi:login"></iconify-icon>
+                  ورود
+                </button>
+              </form>
+              <p class="form-link">
+                حساب کاربری ندارید؟
+                <a href="#page-signup" class="nav-link">ثبت‌نام کنید</a>
+              </p>
+            </div>
+          </section>
+
+          <section id="page-signup" class="page">
+            <div class="auth-banner">
+              <iconify-icon
+                icon="geo:ui-earth-east"
+                width="100"
+                height="100"
+              ></iconify-icon>
+            </div>
+            <div class="form-container">
+              <h2>ایجاد حساب کاربری</h2>
+              <p>با ایجاد یک حساب کاربری جدید شروع کنید.</p>
+              <form>
+                <div class="input-group">
+                  <label for="register-username">نام کاربری</label>
+                  <input
+                    type="username"
+                    id="register-username"
+                    placeholder="hossein2890"
+                  />
+                  <iconify-icon icon="mdi:user"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="register-phone">شماره موبایل</label>
+                  <input
+                    type="phone"
+                    id="register-phone"
+                    placeholder="0923*******"
+                  />
+                  <iconify-icon icon="mdi:phone"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="register-password">رمز عبور</label>
+                  <input
+                    type="password"
+                    id="register-password"
+                    placeholder="ad4#516s"
+                  />
+                  <iconify-icon icon="mdi:key-variant"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="register-password-repeat">تکرار رمز عبور</label>
+                  <input
+                    type="password"
+                    id="register-password-repeat"
+                    placeholder="ad4#516s"
+                  />
+                  <iconify-icon icon="mdi:key-variant"></iconify-icon>
+                </div>
+                <button
+                  id="register-button"
+                  type="submit"
+                  class="btn btn-primary full-width"
+                >
+                  <iconify-icon icon="mdi:user-add"></iconify-icon>
+                  ثبت‌نام
+                </button>
+              </form>
+              <p class="form-link">
+                قبلاً حساب ساخته‌اید؟
+                <a href="#page-login" class="nav-link">وارد شوید</a>
+              </p>
+            </div>
+          </section>
+
+          <section id="page-bookings" class="page">
+            <div class="page-header">
+              <h2>رزروهای من</h2>
+            </div>
+            <div id="bookings-container"></div>
+          </section>
+
+          <section id="page-watchlist" class="page">
+            <div class="page-header">
+              <h2>سفرهای ذخیره شده</h2>
+            </div>
+            <div id="watchlist-container"></div>
+          </section>
+
+          <section id="page-profile" class="page">
+            <div class="page-header">
+              <h2>پروفایل</h2>
+            </div>
+            <div class="profile-card">
+              <div class="profile-pic-large" id="profile-page-avatar"></div>
+              <h3 id="profile-username">نام کاربری</h3>
+              <p id="profile-phone">شماره تلفن</p>
+            </div>
+
+            <div class="profile-menu">
+              <div id="role-management-container"></div>
+
+              <a
+                href="#page-login"
+                id="logout-button"
+                class="menu-item logout nav-link"
+              >
+                <iconify-icon icon="mdi:logout"></iconify-icon>
+                <span>خروج از حساب</span>
+              </a>
+            </div>
+          </section>
+
+          <section id="page-host-dashboard" class="page">
+            <div class="page-header">
+              <h2>داشبورد میزبان</h2>
+            </div>
+            <p class="placeholder-full-width">
+              خلاصه فعالیت‌های شما در اینجا نمایش داده می‌شود.
+            </p>
+          </section>
+
+          <section id="page-host-accommodations" class="page">
+            <div class="page-header">
+              <h2>اقامتگاه‌های من</h2>
+            </div>
+            <div class="host-accommodations-actions">
+              <button
+                id="register-accommodation-button"
+                class="btn btn-primary full-width"
+              >
+                <iconify-icon icon="mdi:plus-circle-outline"></iconify-icon>
+                <span>ثبت اقامتگاه جدید</span>
+              </button>
+            </div>
+            <div id="host-accommodations-list" class="accommodation-list">
+              <p class="placeholder-full-width">
+                شما هنوز اقامتگاهی ثبت نکرده‌اید.
+              </p>
+            </div>
+          </section>
+
+          <section id="page-create-accommodation" class="page">
+            <div class="page-header">
+              <div class="page-navigation">
+                <a
+                  href="#page-host-accommodations"
+                  class="btn-icon nav-link back-to-host-accommodations"
+                  ><iconify-icon icon="mdi:arrow-right"></iconify-icon
+                ></a>
+                <h2 id="accommodation-form-title">ثبت اقامتگاه جدید</h2>
+              </div>
+            </div>
+            <div class="form-container">
+              <form id="accommodation-form">
+                <div class="input-group">
+                  <label for="accommodation-name">نام اقامتگاه</label>
+                  <input
+                    type="text"
+                    id="accommodation-name"
+                    placeholder="نام کامل اقامتگاه"
+                    required
+                  />
+                  <iconify-icon icon="mdi:home-city"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="accommodation-address">آدرس</label>
+                  <input
+                    type="text"
+                    id="accommodation-address"
+                    placeholder="آدرس دقیق اقامتگاه"
+                    required
+                  />
+                  <iconify-icon icon="mdi:map-marker"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="accommodation-description">توضیحات</label>
+                  <textarea
+                    id="accommodation-description"
+                    placeholder="توضیحات کامل اقامتگاه، امکانات و قوانین"
+                    rows="5"
+                  ></textarea>
+                </div>
+                <div class="input-group">
+                  <label for="accommodation-price">قیمت هر شب (تومان)</label>
+                  <input
+                    type="number"
+                    id="accommodation-price"
+                    placeholder="قیمت پایه برای هر شب"
+                    min="0"
+                    required
+                  />
+                  <iconify-icon icon="mdi:cash"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="accommodation-stars">امتیاز (ستاره)</label>
+                  <select id="accommodation-stars" required>
+                    <option value="">انتخاب کنید</option>
+                    <option value="1">1 ستاره</option>
+                    <option value="2">2 ستاره</option>
+                    <option value="3">3 ستاره</option>
+                    <option value="4">4 ستاره</option>
+                    <option value="5">5 ستاره</option>
+                  </select>
+                  <iconify-icon icon="mdi:star"></iconify-icon>
+                </div>
+                <div class="input-group">
+                  <label for="accommodation-image-url">لینک تصویر اصلی</label>
+                  <input
+                    type="url"
+                    id="accommodation-image-url"
+                    placeholder="مثال: https://example.com/image.jpg"
+                  />
+                  <iconify-icon icon="mdi:image"></iconify-icon>
+                </div>
+
+                <button
+                  id="save-accommodation-button"
+                  type="submit"
+                  class="btn btn-primary full-width"
+                >
+                  <iconify-icon icon="mdi:content-save-outline"></iconify-icon>
+                  <span>ذخیره اقامتگاه</span>
+                </button>
+              </form>
+            </div>
+          </section>
+
+          <section id="page-host-bookings" class="page">
+            <div class="page-header">
+              <h2>مدیریت رزروها</h2>
+            </div>
+            <p class="placeholder-full-width">
+              رزروهای اقامتگاه‌های شما در اینجا نمایش داده می‌شود.
+            </p>
+          </section>
+
+          <section id="page-admin-dashboard" class="page">
+            <div class="page-header">
+              <h2>داشبورد مدیریت</h2>
+            </div>
+            <div class="admin-container">
+              <h3>آمار کلی</h3>
+              <div id="admin-stats-container">
+                <p class="placeholder-full-width">
+                  بخش آمار در حال ساخت است...
+                </p>
+              </div>
+            </div>
+          </section>
+
+          <section id="page-admin-listings" class="page">
+            <div class="page-header">
+              <h2>اقامتگاه‌های در انتظار</h2>
+            </div>
+            <div class="admin-container">
+              <div id="admin-pending-list" class="admin-list">
+                <p class="placeholder-full-width">در حال بارگذاری...</p>
+              </div>
+            </div>
+          </section>
+
+          <section id="page-admin-users" class="page">
+            <div class="page-header">
+              <h2>مدیریت کاربران</h2>
+            </div>
+            <div class="filter-swiper">
+              <div class="swiper-wrapper" id="admin-user-filters">
+                <div class="swiper-slide">
+                  <button class="filter-button active" data-filter="all">
+                    همه
+                  </button>
+                </div>
+                <div class="swiper-slide">
+                  <button class="filter-button" data-filter="host">
+                    فقط میزبان‌ها
+                  </button>
+                </div>
+                <div class="swiper-slide">
+                  <button class="filter-button" data-filter="tourist">
+                    فقط توریست‌ها
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="admin-container">
+              <div id="admin-user-list" class="admin-list">
+                <p class="placeholder-full-width">در حال بارگذاری...</p>
+              </div>
+            </div>
+          </section>
+
+          <section id="page-admin-edit-user" class="page">
+            <div class="page-header">
+              <div class="page-navigation">
+                <a href="#page-admin-users" class="btn-icon nav-link">
+                  <iconify-icon icon="mdi:arrow-right"></iconify-icon>
+                </a>
+                <h2>ویرایش دسترسی کاربر</h2>
+              </div>
+            </div>
+            <div id="admin-edit-user-form-container" class="form-container">
+              <p class="placeholder-full-width">
+                در حال بارگذاری اطلاعات کاربر...
+              </p>
+            </div>
+          </section>
+        </main>
+
+        <footer>
+          <nav>
+            <a href="#page-home" class="nav-link active"
+              ><iconify-icon icon="mdi:home"></iconify-icon><span>خانه</span></a
+            >
+            <a href="#page-bookings" class="nav-link"
+              ><iconify-icon icon="mdi:book-open-variant"></iconify-icon
+              ><span>رزروها</span></a
+            >
+            <a href="#page-watchlist" class="nav-link"
+              ><iconify-icon icon="mdi:heart-outline"></iconify-icon
+              ><span>موردعلاقه‌ها</span></a
+            >
+            <a href="#page-profile" class="nav-link"
+              ><iconify-icon icon="mdi:account-circle-outline"></iconify-icon
+              ><span>پروفایل</span></a
+            >
+          </nav>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Swiper.js JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script type="module" src="api.js"></script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
